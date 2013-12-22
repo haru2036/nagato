@@ -17,4 +17,4 @@ trainClass inputString = do
 
 main = do
   line <- readLn
-  trainClass line
+  return $ trainClass line
