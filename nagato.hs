@@ -13,15 +13,6 @@ trainClass :: String -> IO (HashMap String Int)
 loadSettings :: String -> IO [(String, String)]
 
 
-data AClass = AClass {
-  className :: String,
-  dataSource :: String
-  }deriving(Eq, Show, Data, Typeable)
-
-data ClassList = ClassList{
-  classes :: [AClass]
-  }deriving(Eq, Show, Data, Typeable)
-
 searchAndCountWords key items = length $ Data.List.filter (==key) items
 
 getUnigramFrequency sList = fromList [(a, searchAndCountWords a sList) | a <- nub sList]
