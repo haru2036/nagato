@@ -13,6 +13,15 @@ trainClass :: String -> IO (HashMap String Int)
 loadSettings :: String -> IO [(String, String)]
 
 
+data AClass = AClass {
+  className :: String,
+  dataSource :: String
+  }deriving(Eq, Show, Data, Typeable)
+
+data ClassList = ClassList{
+  classes :: [AClass]
+  }deriving(Eq, Show, Data, Typeable)
+
 searchAndCountWords key items = length $ Data.List.filter (==key) items
 
 getUnigramFrequency sList = fromList [(a, searchAndCountWords a sList) | a <- nub sList]
@@ -25,7 +34,7 @@ trainClass inputString = do
 loadSettings settingName = do
   handle <- openFile settingName ReadMode
   contents <- hGetContents handle
-  return $ decodeJSON contents :: IO [(String, String)]
+  return $ Data.List.map(\a -> (className a, dataSource a))(classes(decodeJSON contents :: ClassList))
 
 
 main = do
