@@ -11,6 +11,7 @@ searchAndCountWords :: String -> [String] -> Int
 getUnigramFrequency :: [String] -> HashMap String Int
 trainClass :: String -> IO (HashMap String Int)
 loadSettings :: String -> IO [(String, String)]
+filenameToString :: String -> IO String
 
 
 data AClass = AClass {
@@ -36,7 +37,7 @@ loadSettings settingName = do
   contents <- hGetContents handle
   return $ Data.List.map(\a -> (className a, dataSource a))(classes(decodeJSON contents :: ClassList))
 
+filenameToString filename = 
 
 main = do
-  line <- readLn
-  return $ trainClass line
+  classesList <- loadSettings "classes.json"
