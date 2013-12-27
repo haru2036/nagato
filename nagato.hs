@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 import System.IO
+import Control.Monad
 import Text.MeCab
 import Text.JSON
 import Text.JSON.Generic
@@ -9,6 +10,7 @@ import Data.HashMap.Lazy
 
 searchAndCountWords :: String -> [String] -> Int
 getUnigramFrequency :: [String] -> HashMap String Int
+
 trainClass :: String -> IO (HashMap String Int)
 loadSettings :: String -> IO [(String, String)]
 loadClassStrings :: [String] -> IO [String]
@@ -57,6 +59,6 @@ main = do
   classesList <- loadSettings "classes.json"
   let unzippedClasses = unzip classesList
   classStrings <- loadClassStrings $ snd unzippedClasses
-  let classesList = zip (fst unzippedClasses) classStrings
-  let trainResult = [(fst a, trainClass $ snd a) | a <- classesList]
-  return trainResult
+  classTrained <- mapM (\a -> trainClass a)classStrings
+  let trainResult = zip (fst unzippedClasses) classTrained
+  print trainResult
