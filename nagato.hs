@@ -6,16 +6,17 @@ import Text.JSON
 import Text.JSON.Generic
 import Data.List
 import Data.Tuple
-import Data.HashMap.Lazy
+import Data.Map
+import Data.Serialize
 
 searchAndCountWords :: String -> [String] -> Int
-getUnigramFrequency :: [String] -> HashMap String Int
+getUnigramFrequency :: [String] -> Map String Int
 
-trainClass :: String -> IO (HashMap String Int)
+trainFromSetting :: String -> IO [(String, Map String Int)]
+trainClass :: String -> IO (Map String Int)
 loadSettings :: String -> IO [(String, String)]
 loadClassStrings :: [String] -> IO [String]
 filenameToString :: String -> IO String
-
 
 data AClass = AClass {
   className :: String,
@@ -25,6 +26,15 @@ data AClass = AClass {
 data ClassList = ClassList{
   classes :: [AClass]
   }deriving(Eq, Show, Data, Typeable)
+
+data Frequency = Frequency{
+  frequency :: Map String Int
+  }deriving(Eq, Show, Data, Typeable)
+
+data FrequencyOfClasses = FrequencyOfClasses{
+  classesLearned :: Map String Frequency
+  }deriving(Eq, Show, Data, Typeable)
+
 
 searchAndCountWords key items = length $ Data.List.filter (==key) items
 
@@ -56,9 +66,14 @@ loadClassStrings fileNames = do
       return $ str : deepStrs
 
 main = do
-  classesList <- loadSettings "classes.json"
+  trainResult <- trainFromSetting "classes.json"
+  return $ Data.Serialize.encode trainResult
+  --デシリアライズ時はData.Serialize.decodeを使う、方はEither String [(String, Map String Int)]
+
+trainFromSetting settingFileName = do
+  classesList <- loadSettings settingFileName
   let unzippedClasses = unzip classesList
   classStrings <- loadClassStrings $ snd unzippedClasses
   classTrained <- mapM (\a -> trainClass a)classStrings
-  let trainResult = zip (fst unzippedClasses) classTrained
-  print trainResult
+  return $ zip (fst unzippedClasses) classTrained
+
