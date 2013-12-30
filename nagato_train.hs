@@ -8,6 +8,7 @@ import Data.List
 import Data.Tuple
 import Data.Map
 import Data.Serialize
+import qualified ClassRW as ClassRW
 
 searchAndCountWords :: String -> [String] -> Int
 getUnigramFrequency :: [String] -> Map String Int
@@ -67,8 +68,7 @@ loadClassStrings fileNames = do
 
 main = do
   trainResult <- trainFromSetting "classes.json"
-  return $ Data.Serialize.encode trainResult
-  --デシリアライズ時はData.Serialize.decodeを使う、方はEither String [(String, Map String Int)]
+  ClassRW.writeToFile "classes.bin" trainResult
 
 trainFromSetting settingFileName = do
   classesList <- loadSettings settingFileName
