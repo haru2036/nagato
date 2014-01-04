@@ -8,12 +8,13 @@ import Data.List
 import Data.Tuple
 import Data.Map
 import Data.Serialize
-import qualified ClassRW as ClassRW
+import qualified NagatoIO as NagatoIO
 
 searchAndCountWords :: String -> [String] -> Int
 getUnigramFrequency :: [String] -> Map String Int
+calcParameterForClass :: Map String Int -> Int -> Map String Float
 
-trainFromSetting :: String -> IO [(String, Map String Int)]
+trainFromSetting :: String -> IO [(String, Map String Float)]
 trainClass :: String -> IO (Map String Int)
 loadSettings :: String -> IO [(String, String)]
 loadClassStrings :: [String] -> IO [String]
@@ -42,8 +43,7 @@ searchAndCountWords key items = length $ Data.List.filter (==key) items
 getUnigramFrequency sList = fromList [(a, searchAndCountWords a sList) | a <- nub sList]
 
 trainClass inputString = do
-  mecab <- new2 "-Owakati"
-  parseResult <- parse mecab inputString
+  parseResult <- NagatoIO.wakatiParse inputString
   return $ getUnigramFrequency $ words parseResult 
 
 loadSettings settingName = do
@@ -68,12 +68,14 @@ loadClassStrings fileNames = do
 
 main = do
   trainResult <- trainFromSetting "classes.json"
-  ClassRW.writeToFile "classes.bin" trainResult
+  NagatoIO.writeToFile "classes.bin" trainResult
 
 trainFromSetting settingFileName = do
   classesList <- loadSettings settingFileName
   let unzippedClasses = unzip classesList
   classStrings <- loadClassStrings $ snd unzippedClasses
-  classTrained <- mapM (\a -> trainClass a)classStrings
-  return $ zip (fst unzippedClasses) classTrained
+  classCounted <- mapM (\a -> trainClass a) classStrings
+  let classesTrained = Data.List.map (\a -> calcParameterForClass a 2) classCounted
+  return $ zip (fst unzippedClasses) classesTrained
 
+calcParameterForClass classMap alpha = Data.Map.map (\a -> ((realToFrac (a + 1) / (realToFrac ((sum (elems classMap) + (length (keys classMap)) * (alpha - 1))))))) classMap
