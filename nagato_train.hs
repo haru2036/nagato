@@ -8,6 +8,7 @@ import Data.List
 import Data.Tuple
 import Data.Map
 import Data.Serialize
+import System.IO.UTF8 as S
 import qualified NagatoIO as NagatoIO
 
 searchAndCountWords :: String -> [String] -> Int
@@ -48,12 +49,12 @@ trainClass inputString = do
 
 loadSettings settingName = do
   handle <- openFile settingName ReadMode
-  contents <- hGetContents handle
+  contents <- S.hGetContents handle
   return $ Data.List.map(\a -> (className a, dataSource a))(classes(decodeJSON contents :: ClassList))
 
 filenameToString fileName = do
   handle <- openFile fileName ReadMode
-  contents <- hGetContents handle
+  contents <- S.hGetContents handle
   return $ contents
 
 loadClassStrings fileNames = do
