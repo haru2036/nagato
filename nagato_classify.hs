@@ -34,5 +34,5 @@ loadFileToClassify fileName = do
 
 makeProbabilityList words classes = Data.List.map (\a -> (fst a, calcProbability words (snd a))) classes 
 
-classify propabilityList = let valueList = snd (unzip propabilityList)
-                            in maybe "error" (\a -> fst (propabilityList !! a)) $ (Data.List.elemIndex (maximum valueList)) valueList
+classify propabilityList =let valueList = snd (unzip propabilityList)
+                          in maybe "error" (\a -> fst (propabilityList !! a)) $ (Data.List.elemIndex (maximum valueList)) valueList
