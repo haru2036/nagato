@@ -7,3 +7,5 @@ nagato
 *.txt
 *.bin
 *.old
+nagato_classify
+nagato_train
