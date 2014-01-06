@@ -14,9 +14,11 @@ import Data.ByteString
 import Data.Either.Unwrap
 import Text.MeCab
 
+
 writeToFile :: String -> [(String, Map String Float)] -> IO()
 readFromFile :: String -> IO [(String, Map String Float)]
 wakatiParse :: String -> IO String
+
 
 writeToFile filePath classes = do
   let bytes = Data.Serialize.encode classes
