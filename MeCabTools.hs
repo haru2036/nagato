@@ -6,7 +6,6 @@ module Text.MeCab.MeCabTools
 
 import Text.Regex
 import Text.MeCab
-import Data.List
 
 parseChasenFormat :: String -> IO String
 parseFilteredChasenFormat :: String -> [String] -> IO [String]
@@ -25,16 +24,16 @@ parseChasenFormat sentence = do
   mecab <- new2 "-Ochasen"
   parse mecab sentence
 
-parseFilteredChasenFormat sentence filter = do
+parseFilteredChasenFormat sentence filters = do
   chasenString <- parseChasenFormat sentence
-  return $ filterByPartOfSpeech chasenString filter
+  return $ filterByPartOfSpeech chasenString filters
 
 splitOnTab line = splitRegex (mkRegex "\t") line
 
-doEachFilters part filter = if (head $ splitRegex (mkRegex "-") part) == filter
+doEachFilters part filtersItem = if (head $ splitRegex (mkRegex "-") part) == filtersItem
                             then True
                             else False
 
 filterAPart line filters = or $ map (\a -> doEachFilters ((splitOnTab line) !! 3) a) filters
 
-filterByPartOfSpeech chasenString filters = [x | x <- lines chasenString, filterAPart x filters== True]
+filterByPartOfSpeech chasenString filters = [x | x <- lines chasenString, filterAPart x filters == True]
