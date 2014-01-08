@@ -10,6 +10,7 @@ import Data.Map
 import Data.Serialize
 import System.IO.UTF8 as S
 import qualified NagatoIO as NagatoIO
+import qualified MeCabTools as MeCabTools
 
 searchAndCountWords :: String -> [String] -> Int
 getUnigramFrequency :: [String] -> Map String Int
@@ -44,8 +45,8 @@ searchAndCountWords key items = length $ Data.List.filter (==key) items
 getUnigramFrequency sList = fromList [(a, searchAndCountWords a sList) | a <- nub sList]
 
 trainClass inputString = do
-  parseResult <- NagatoIO.wakatiParse inputString
-  return $ getUnigramFrequency $ words parseResult 
+  parseResult <- MeCabTools.parseFilteredChasenFormat inputString ["名詞"]
+  return $ getUnigramFrequency $ parseResult 
 
 loadSettings settingName = do
   handle <- openFile settingName ReadMode

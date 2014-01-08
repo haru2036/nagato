@@ -6,6 +6,7 @@ import Data.Tuple
 import Data.Map
 import System.IO.UTF8 as S
 import qualified NagatoIO as NagatoIO 
+import qualified MeCabTools as MeCabTools
 
 classify :: [(String, Float)] -> String
 calcProbability :: [String] -> Map String Float -> Float
@@ -18,7 +19,7 @@ main = do
   classes <- NagatoIO.readFromFile "classes.bin"
   readedSentence <- loadFileToClassify "toclassify.txt" 
   S.putStrLn readedSentence
-  parsedSentence <- NagatoIO.wakatiParse readedSentence
+  parsedSentence <- MeCabTools.parseWakati readedSentence
   let propabilityList = makeProbabilityList (words parsedSentence) classes
   System.IO.print propabilityList
   System.IO.putStrLn $ classify propabilityList

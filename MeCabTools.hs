@@ -1,4 +1,4 @@
-module Text.MeCab.MeCabTools
+module MeCabTools
 ( parseChasenFormat
 , parseFilteredChasenFormat
 , parseWakati
@@ -6,6 +6,8 @@ module Text.MeCab.MeCabTools
 
 import Text.Regex
 import Text.MeCab
+import Data.List
+import Debug.Trace
 
 parseChasenFormat :: String -> IO String
 parseFilteredChasenFormat :: String -> [String] -> IO [String]
@@ -15,25 +17,29 @@ filterByPartOfSpeech :: String -> [String] -> [String]
 filterAPart :: String -> [String] -> Bool
 doEachFilters :: String -> String -> Bool
 splitOnTab :: String -> [String]
+splitOnConma :: String -> [String]
 
 parseWakati sentence = do
   mecab <- new2 "-Owakati"
   parse mecab sentence
 
 parseChasenFormat sentence = do
-  mecab <- new2 "-Ochasen"
+  mecab <- new2 ""
   parse mecab sentence
 
 parseFilteredChasenFormat sentence filters = do
   chasenString <- parseChasenFormat sentence
-  return $ filterByPartOfSpeech chasenString filters
+  let endStripped = init $ lines chasenString
+  let strippedChasenString = unlines [x | x <- endStripped, x /= ""]
+  let returned = filterByPartOfSpeech strippedChasenString filters
+  return returned
 
 splitOnTab line = splitRegex (mkRegex "\t") line
 
-doEachFilters part filtersItem = if (head $ splitRegex (mkRegex "-") part) == filtersItem
-                            then True
-                            else False
+splitOnConma line = splitRegex (mkRegex ",") line
 
-filterAPart line filters = or $ map (\a -> doEachFilters ((splitOnTab line) !! 3) a) filters
+doEachFilters part filtersItem = isPrefixOf part filtersItem
 
-filterByPartOfSpeech chasenString filters = [x | x <- lines chasenString, filterAPart x filters == True]
+filterAPart line filters = or $ map (\a -> doEachFilters (head (splitOnConma ((splitOnTab line) !! 1))) a) filters
+
+filterByPartOfSpeech chasenString filters = [head (splitOnTab x) | x <- (lines chasenString), (filterAPart x filters) == True]
