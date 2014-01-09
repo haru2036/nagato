@@ -15,7 +15,9 @@ parseWakati :: String -> IO String
 
 filterByPartOfSpeech :: String -> [String] -> [String]
 filterAPart :: String -> [String] -> Bool
+splitLine :: String -> String 
 doEachFilters :: String -> String -> Bool
+getSpeechFromSplitTab :: String -> String
 splitOnTab :: String -> [String]
 splitOnConma :: String -> [String]
 
@@ -40,6 +42,16 @@ splitOnConma line = splitRegex (mkRegex ",") line
 
 doEachFilters part filtersItem = isPrefixOf part filtersItem
 
-filterAPart line filters = or $ map (\a -> doEachFilters (head (splitOnConma ((splitOnTab line) !! 1))) a) filters
+filterAPart line filters = or $ map (\a -> doEachFilters (splitLine line) a) filters
+
+getSpeechFromSplitTab line = let splitted = splitOnTab line
+  in if (length splitted) >= 2
+    then splitted !! 1
+    else ""
+
+splitLine line = let splitted = splitOnConma (getSpeechFromSplitTab line)
+  in if splitted /= []
+    then head splitted
+    else ""
 
 filterByPartOfSpeech chasenString filters = [head (splitOnTab x) | x <- (lines chasenString), (filterAPart x filters) == True]
