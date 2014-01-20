@@ -1,4 +1,8 @@
 {-# LANGUAGE DeriveDataTypeable #-}
+module Nagato_train
+( countFromSetting
+  ,calcParameterForClass
+)where
 import System.IO
 import Control.Monad
 import Text.MeCab
@@ -15,6 +19,8 @@ import qualified MeCabTools as MeCabTools
 searchAndCountWords :: String -> [String] -> Int
 getUnigramFrequency :: [String] -> Map String Int
 calcParameterForClass :: Map String Int -> Int -> Map String Float
+
+countFromSetting :: String -> IO [(String, Map String Int)]
 
 trainFromSetting :: String -> IO [(String, Map String Float)]
 trainClass :: String -> IO (Map String Int)
@@ -76,8 +82,15 @@ trainFromSetting settingFileName = do
   classesList <- loadSettings settingFileName
   let unzippedClasses = unzip classesList
   classStrings <- loadClassStrings $ snd unzippedClasses
-  classCounted <- mapM (\a -> trainClass a) classStrings
-  let classesTrained = Data.List.map (\a -> calcParameterForClass a 2) classCounted
+  classesCounted <- mapM (\a -> trainClass a) classStrings
+  let classesTrained = Data.List.map (\a -> calcParameterForClass a 2) classesCounted
   return $ zip (fst unzippedClasses) classesTrained
+
+countFromSetting settingFileName = do
+  classesList <- loadSettings settingFileName
+  let unzippedClasses = unzip classesList
+  classStrings <- loadClassStrings $ snd unzippedClasses
+  classesCounted <- mapM (\a -> trainClass a) classStrings
+  return $ zip (fst unzippedClasses) classesCounted
 
 calcParameterForClass classMap alpha = Data.Map.map (\a -> ((realToFrac (a + 1) / (realToFrac ((sum (elems classMap) + (length (keys classMap)) * (alpha - 1))))))) classMap
