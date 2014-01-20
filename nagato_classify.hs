@@ -22,7 +22,6 @@ main = do
 classifyIO = do
   classes <- NagatoIO.readFromFile "classes.bin"
   readedSentence <- NagatoIO.loadFileToClassify "toclassify.txt" 
-  S.putStrLn readedSentence
   parsedSentence <- MeCabTools.parseWakati readedSentence
   let propabilityList = makeProbabilityList (words parsedSentence) classes
   System.IO.print propabilityList
@@ -31,7 +30,6 @@ classifyIO = do
 classifyComplementIO = do
   classes <- NagatoIO.readFromFile "complementClasses.bin"
   readedSentence <- NagatoIO.loadFileToClassify "toclassify.txt" 
-  S.putStrLn readedSentence
   parsedSentence <- MeCabTools.parseWakati readedSentence
   let propabilityList = makeProbabilityList (words parsedSentence) classes
   System.IO.print propabilityList
