@@ -6,12 +6,14 @@ import Data.Map
 import qualified NagatoIO as NagatoIO 
 import qualified MeCabTools as MeCabTools
 import System.IO.UTF8 as S
+import Models 
+
 
 classify :: [(String, Float)] -> String
 classifyByComplementClasses :: [(String, Float)] -> String
-calcProbability :: [String] -> Map String Float -> Float
-makeProbabilityList :: [String] -> [(String, Map String Float)] -> [(String, Float)]
-lookupPropabilityOfWord :: String -> Map String Float -> Float
+calcProbability :: [String] -> Props -> Float
+makeProbabilityList :: [String] -> [(String, Props)] -> [(String, Float)]
+lookupPropabilityOfWord :: String -> Props -> Float
 classifyIO :: IO()
 classifyComplementIO :: IO()
 

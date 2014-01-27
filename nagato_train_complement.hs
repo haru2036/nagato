@@ -8,15 +8,16 @@ import Data.Tuple
 import Data.Map
 import Data.Serialize
 import System.IO.UTF8 as S
+import Models
 import qualified NagatoIO as NagatoIO
 import qualified Nagato_train as Nagato_train
 
-makeComplementClass :: String -> [(String, Map String Int)] -> Map String Int
-getClassNameList :: Map String (Map String Int) -> [String]
-twoMapKeys :: Map String Int -> Map String Int -> [String]
-addClasses :: [Map String Int] -> Map String Int
-getOtherClasses :: String -> Map String (Map String Int) -> Map String Int
-addTwoMaps :: Map String Int -> Map String Int -> Map String Int
+makeComplementClass :: String -> [(String, Freqs)] -> Freqs
+getClassNameList :: Map String (Freqs) -> [String]
+twoMapKeys :: Freqs -> Freqs -> [String]
+addClasses :: [Freqs] -> Freqs
+getOtherClasses :: String -> Map String (Freqs) -> Freqs
+addTwoMaps :: Freqs -> Freqs -> Freqs
 removeMaybe :: Maybe Int -> Int
 
 removeMaybe mb = maybe 0 (\a -> a) mb

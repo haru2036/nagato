@@ -12,18 +12,19 @@ import Data.List
 import Data.Tuple
 import Data.Map
 import Data.Serialize
+import Models
 import System.IO.UTF8 as S
 import qualified NagatoIO as NagatoIO
 import qualified MeCabTools as MeCabTools
 
 searchAndCountWords :: String -> [String] -> Int
-getUnigramFrequency :: [String] -> Map String Int
-calcParameterForClass :: Map String Int -> Int -> Map String Float
+getUnigramFrequency :: [String] -> Freqs
+calcParameterForClass :: Freqs -> Int -> Props
 
-countFromSetting :: String -> IO [(String, Map String Int)]
+countFromSetting :: String -> IO [(String, Freqs)]
 
-trainFromSetting :: String -> IO [(String, Map String Float)]
-trainClass :: String -> IO (Map String Int)
+trainFromSetting :: String -> IO [(String, Props)]
+trainClass :: String -> IO Freqs
 loadSettings :: String -> IO [(String, String)]
 loadClassStrings :: [String] -> IO [String]
 filenameToString :: String -> IO String
@@ -38,7 +39,7 @@ data ClassList = ClassList{
   }deriving(Eq, Show, Data, Typeable)
 
 data Frequency = Frequency{
-  frequency :: Map String Int
+  frequency :: Freqs
   }deriving(Eq, Show, Data, Typeable)
 
 data FrequencyOfClasses = FrequencyOfClasses{
