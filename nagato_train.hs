@@ -14,8 +14,8 @@ import Data.Map
 import Data.Serialize
 import Models
 import System.IO.UTF8 as S
-import qualified NagatoIO as NagatoIO
-import qualified MeCabTools as MeCabTools
+import NagatoIO as NagatoIO
+import MeCabTools as MeCabTools
 
 searchAndCountWords :: String -> [String] -> Int
 getUnigramFrequency :: [String] -> Freqs

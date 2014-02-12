@@ -3,8 +3,8 @@ import Control.Monad
 import Data.List
 import Data.Tuple
 import Data.Map
-import qualified NagatoIO as NagatoIO 
-import qualified MeCabTools as MeCabTools
+import NagatoIO as NagatoIO 
+import MeCabTools as MeCabTools
 import System.IO.UTF8 as S
 import Models 
 
