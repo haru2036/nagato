@@ -1,3 +1,9 @@
+module Nagato_classify(
+  calcProbability
+  ,makeProbabilityList
+  ,classify
+  ,classifyByComplementClasses
+)where
 import System.IO
 import Control.Monad
 import Data.List
@@ -6,17 +12,10 @@ import Data.Map
 import NagatoIO as NagatoIO 
 import MeCabTools as MeCabTools
 import System.IO.UTF8 as S
-import Models 
+import Models as Models
 
 
-classify :: [(String, Float)] -> String
-classifyByComplementClasses :: [(String, Float)] -> String
-calcProbability :: [String] -> Props -> Float
-makeProbabilityList :: [String] -> [(String, Props)] -> [(String, Float)]
-lookupPropabilityOfWord :: String -> Props -> Float
 classifyIO :: IO()
-classifyComplementIO :: IO()
-
 main = do
   classifyIO
   classifyComplementIO
@@ -29,6 +28,7 @@ classifyIO = do
   System.IO.print propabilityList
   System.IO.putStrLn $ classify propabilityList
 
+classifyComplementIO :: IO()
 classifyComplementIO = do
   classes <- NagatoIO.readFromFile "complementClasses.bin"
   readedSentence <- NagatoIO.loadFileToClassify "toclassify.txt" 
@@ -37,14 +37,20 @@ classifyComplementIO = do
   System.IO.print propabilityList
   System.IO.putStrLn $ classifyByComplementClasses propabilityList
 
+calcProbability :: [String] -> Props -> Float
 calcProbability words classMap = product $ Data.List.map (\a -> lookupPropabilityOfWord a classMap) words
 
+lookupPropabilityOfWord :: String -> Props -> Float
 lookupPropabilityOfWord word classMap = maybe 1.0 (\a -> a + 1.0) (Data.Map.lookup word classMap)
 
+makeProbabilityList :: [String] -> [(String, Props)] -> [(String, Float)]
 makeProbabilityList words classes = Data.List.map (\a -> (fst a, calcProbability words (snd a))) classes 
 
+classifyByComplementClasses :: [(String, Float)] -> String
 classifyByComplementClasses propabilityList = let valueList = snd (unzip propabilityList)
                           in maybe "error" (\a -> fst (propabilityList !! a)) $ (Data.List.elemIndex (minimum valueList)) valueList
 
+classify :: [(String, Float)] -> String
 classify propabilityList = let valueList = snd (unzip propabilityList)
                           in maybe "error" (\a -> fst (propabilityList !! a)) $ (Data.List.elemIndex (maximum valueList)) valueList
+
