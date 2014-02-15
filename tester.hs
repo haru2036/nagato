@@ -7,8 +7,9 @@ import Models
 
 
 main = do
-  csvEither <- parseCSVFromFile "testData.CSV" 
-  let csvData = either (\a-> []) (\a->a) csvEither
+  rawCsvData <- NagatoIO.loadCSVFileUtf8 "testData.csv"
+  let csvData = init rawCsvData
+  print csvData
   classes <- NagatoIO.readFromFile "classes.bin"
   classesComplement <- NagatoIO.readFromFile "complementClasses.bin"
   classed <- mapM (\x->test (head x) classes classesComplement) csvData

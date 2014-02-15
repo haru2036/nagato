@@ -5,13 +5,10 @@ module Nagato_classify(
   ,classifyByComplementClasses
 )where
 import System.IO
-import Control.Monad
 import Data.List
-import Data.Tuple
 import Data.Map
 import NagatoIO as NagatoIO 
 import MeCabTools as MeCabTools
-import System.IO.UTF8 as S
 import Models as Models
 
 

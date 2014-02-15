@@ -7,7 +7,6 @@ module MeCabTools
 import Text.Regex
 import Text.MeCab
 import Data.List
-import Debug.Trace
 
 parseChasenFormat :: String -> IO String
 parseFilteredChasenFormat :: String -> [String] -> IO [String]
