@@ -11,3 +11,4 @@ nagato_classify
 nagato_train
 *.xml
 *.iml
+*.xlsx
