@@ -3,7 +3,7 @@ module NagatoIO
 , readFromFile
 , writeToFileCounts
 , readFromFileCounts
-, loadFileToClassify
+, loadPlainText
 , loadCSVFileUtf8
 )where
 
@@ -15,8 +15,8 @@ import Data.Either.Unwrap
 import Text.CSV
 import System.IO.UTF8 as S
 
-loadFileToClassify :: String -> IO String
-loadFileToClassify fileName = do
+loadPlainText :: String -> IO String
+loadPlainText fileName = do
   handle <- openFile fileName ReadMode
   contents <- S.hGetContents handle
   return $ contents
@@ -45,6 +45,6 @@ readFromFileCounts filePath = do
 
 loadCSVFileUtf8 :: String -> IO CSV
 loadCSVFileUtf8 fileName = do
-  loadedText <- loadFileToClassify fileName
+  loadedText <- loadPlainText fileName
   let parsed = either (\a->[]) (\a->a) $ parseCSV "hoge" loadedText
   return parsed
