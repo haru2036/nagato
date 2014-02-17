@@ -9,8 +9,9 @@ import Models
 main = do
   rawCsvData <- NagatoIO.loadCSVFileUtf8 "testData.csv"
   let csvData = init rawCsvData
-  print csvData
   classes <- NagatoIO.readFromFile "classes.bin"
+  print $ fst $ unzip classes
+  print $ fst $ unzip classesComplement
   classesComplement <- NagatoIO.readFromFile "complementClasses.bin"
   classed <- mapM (\x->test (head x) classes classesComplement) csvData
   let compared = unzip $ map (\a -> judge a) $ zip [a !! 1 | a <- csvData] classed

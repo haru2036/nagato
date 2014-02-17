@@ -1,5 +1,4 @@
 {"classes" : [
-    {"className" : "nagato_battleship",  "dataSource" : "nagato_senkan.txt"},
     {"className" : "nagato_yuki", "dataSource" : "nagato_yuki.txt"},
     {"className" : "nagato_kancolle", "dataSource" : "nagato_kancolle.txt"},
     {"className" : "nagato_city", "dataSource" : "nagato_city.txt"}

@@ -12,3 +12,4 @@ nagato_train
 *.xml
 *.iml
 *.xlsx
+*.csv
