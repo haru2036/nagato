@@ -12,24 +12,23 @@ import MeCabTools as MeCabTools
 import Models as Models
 
 
-classifyIO :: IO()
 main = do
-  classifyIO
-  classifyComplementIO
-
-classifyIO = do
-  classes <- NagatoIO.readFromFile "classes.bin"
   readedSentence <- NagatoIO.loadPlainText "toclassify.txt" 
-  parsedSentence <- MeCabTools.parseWakati readedSentence
+  classifyIO readedSentence
+  classifyComplementIO readedSentence
+
+classifyIO :: String -> IO()
+classifyIO classifySentence = do
+  classes <- NagatoIO.readFromFile "classes.bin"
+  parsedSentence <- MeCabTools.parseWakati classifySentence
   let propabilityList = makeProbabilityList (words parsedSentence) classes
   System.IO.print propabilityList
   System.IO.putStrLn $ classify propabilityList
 
-classifyComplementIO :: IO()
-classifyComplementIO = do
+classifyComplementIO :: String -> IO()
+classifyComplementIO classifySentence = do
   classes <- NagatoIO.readFromFile "complementClasses.bin"
-  readedSentence <- NagatoIO.loadPlainText "toclassify.txt" 
-  parsedSentence <- MeCabTools.parseWakati readedSentence
+  parsedSentence <- MeCabTools.parseWakati classifySentence
   let propabilityList = makeProbabilityList (words parsedSentence) classes
   System.IO.print propabilityList
   System.IO.putStrLn $ classifyByComplementClasses propabilityList
