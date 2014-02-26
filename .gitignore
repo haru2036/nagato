@@ -3,7 +3,6 @@
 *.o
 *.hi
 *.exe
-nagato
 *.txt
 *.bin
 *.old

@@ -1,4 +1,4 @@
-module MeCabTools
+module Text.Nagato.MeCabTools
 ( parseChasenFormat
 , parseFilteredChasenFormat
 , parseWakati

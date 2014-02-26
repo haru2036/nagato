@@ -1,4 +1,4 @@
-module NagatoIO
+module Text.Nagato.NagatoIO
 ( writeToFile
 , readFromFile
 , writeToFileCounts

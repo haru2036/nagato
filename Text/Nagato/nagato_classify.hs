@@ -1,4 +1,4 @@
-module Nagato_classify(
+module Text.Nagato.Nagato_classify(
   calcProbability
   ,makeProbabilityList
   ,classify
@@ -7,9 +7,9 @@ module Nagato_classify(
 import System.IO
 import Data.List
 import Data.Map
-import NagatoIO as NagatoIO 
-import MeCabTools as MeCabTools
-import Models as Models
+import Text.Nagato.NagatoIO as NagatoIO 
+import Text.Nagato.MeCabTools as MeCabTools
+import Text.Nagato.Models as Models
 
 
 main = do

@@ -1,4 +1,4 @@
-module Models
+module Text.Nagato.Models
 ( Freqs
   ,Props
 )where

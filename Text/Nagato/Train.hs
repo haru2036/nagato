@@ -1,19 +1,17 @@
 {-# LANGUAGE DeriveDataTypeable #-}
-module Nagato_train
+module Text.Nagato.Train
 ( countFromSetting
   ,calcParameterForClass
+  ,doTrain
 )where
 import System.IO
+import System.IO.UTF8 as S
 import Text.JSON.Generic
 import Data.List
 import Data.Map
-import Models
-import System.IO.UTF8 as S
-import NagatoIO as NagatoIO
-import MeCabTools as MeCabTools
-
-
-
+import Text.Nagato.Models
+import Text.Nagato.NagatoIO as NagatoIO
+import Text.Nagato.MeCabTools as MeCabTools
 
 data AClass = AClass {
   className :: String,
@@ -69,6 +67,11 @@ loadClassStrings fileNames = do
 
 main :: IO()
 main = do
+  trainResult <- trainFromSetting "classes.json"
+  NagatoIO.writeToFile "classes.bin" trainResult
+
+doTrain :: String -> IO()
+doTrain filename = do
   trainResult <- trainFromSetting "classes.json"
   NagatoIO.writeToFile "classes.bin" trainResult
 
