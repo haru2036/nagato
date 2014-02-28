@@ -3,7 +3,7 @@ import Data.List
 import Text.Nagato.NagatoIO as NagatoIO
 import Text.Nagato.Models as Models
 import Text.Nagato.MeCabTools as MeCabTools
-import qualified Text.Nagato.Nagato_classify as NC
+import qualified Text.Nagato.Classify as NC
 import qualified Text.Nagato.Train as Train
 import qualified Text.Nagato.Train_complement as Train_compl
 
@@ -33,14 +33,7 @@ test :: String -> [(String, Props)] -> [(String, Props)] -> IO(String, String)
 test text classNormal classComplement = do
   wakati <- MeCabTools.parseWakati text
   let wordList = words wakati
-  return ((doClassify wordList classNormal), (doClassifyComplement wordList classComplement))
-
-
-doClassify :: [String] -> [(String, Props)] -> String
-doClassify wordList props = NC.classify $ NC.makeProbabilityList wordList props
-
-doClassifyComplement :: [String] -> [(String, Props)] -> String
-doClassifyComplement wordList props = NC.classifyByComplementClasses $ NC.makeProbabilityList wordList props
+  return ((NC.classify wordList classNormal), (NC.classifyComplement wordList classComplement))
 
 doTrainNormal :: String -> IO()
 doTrainNormal settingName = Train.doTrain settingName

@@ -1,8 +1,8 @@
-module Text.Nagato.Nagato_classify(
+module Text.Nagato.Classify(
   calcProbability
   ,makeProbabilityList
   ,classify
-  ,classifyByComplementClasses
+  ,classifyComplement
 )where
 import System.IO
 import Data.List
@@ -11,7 +11,7 @@ import Text.Nagato.NagatoIO as NagatoIO
 import Text.Nagato.MeCabTools as MeCabTools
 import Text.Nagato.Models as Models
 
-
+main :: IO()
 main = do
   readedSentence <- NagatoIO.loadPlainText "toclassify.txt" 
   classifyIO readedSentence
@@ -23,7 +23,7 @@ classifyIO classifySentence = do
   parsedSentence <- MeCabTools.parseWakati classifySentence
   let propabilityList = makeProbabilityList (words parsedSentence) classes
   System.IO.print propabilityList
-  System.IO.putStrLn $ classify propabilityList
+  System.IO.putStrLn $ selectMost propabilityList
 
 classifyComplementIO :: String -> IO()
 classifyComplementIO classifySentence = do
@@ -31,22 +31,27 @@ classifyComplementIO classifySentence = do
   parsedSentence <- MeCabTools.parseWakati classifySentence
   let propabilityList = makeProbabilityList (words parsedSentence) classes
   System.IO.print propabilityList
-  System.IO.putStrLn $ classifyByComplementClasses propabilityList
+  System.IO.putStrLn $ selectMostByComplementClasses propabilityList
 
 calcProbability :: [String] -> Props -> Float
-calcProbability words classMap = product $ Data.List.map (\a -> lookupPropabilityOfWord a classMap) words
+calcProbability wordList classMap = product $ Data.List.map (\a -> lookupPropabilityOfWord a classMap) wordList 
 
 lookupPropabilityOfWord :: String -> Props -> Float
 lookupPropabilityOfWord word classMap = maybe 1.0 (\a -> a + 1.0) (Data.Map.lookup word classMap)
 
 makeProbabilityList :: [String] -> [(String, Props)] -> [(String, Float)]
-makeProbabilityList words classes = Data.List.map (\a -> (fst a, calcProbability words (snd a))) classes 
+makeProbabilityList wordList classes = Data.List.map (\a -> (fst a, calcProbability wordList (snd a))) classes 
 
-classifyByComplementClasses :: [(String, Float)] -> String
-classifyByComplementClasses propabilityList = let valueList = snd (unzip propabilityList)
+selectMostByComplementClasses :: [(String, Float)] -> String
+selectMostByComplementClasses propabilityList = let valueList = snd (unzip propabilityList)
                           in maybe "error" (\a -> fst (propabilityList !! a)) $ (Data.List.elemIndex (minimum valueList)) valueList
 
-classify :: [(String, Float)] -> String
-classify propabilityList = let valueList = snd (unzip propabilityList)
+selectMost :: [(String, Float)] -> String
+selectMost propabilityList = let valueList = snd (unzip propabilityList)
                           in maybe "error" (\a -> fst (propabilityList !! a)) $ (Data.List.elemIndex (maximum valueList)) valueList
 
+classify :: [String] -> [(String, Props)] -> String
+classify wordList props = selectMost $ makeProbabilityList wordList props
+
+classifyComplement :: [String] -> [(String, Props)] -> String
+classifyComplement wordList props = selectMostByComplementClasses $ makeProbabilityList wordList props
