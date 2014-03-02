@@ -33,6 +33,6 @@ import qualified Text.Nagato.Classify as Classifier
 classes <- NagatoIO.readFromFile "[CLASSFILE]"
 classesComplement <- NagatoIO.readFromFile "[CLASSFILE_FOR_COMPLEMENT]"
 
-Classifier.classify 
-Classifier.classifyComplement
+Classifier.classify '[List of word to classify]' classes
+Classifier.classifyComplement '[List of word to classify]' classesComplement
 ```
