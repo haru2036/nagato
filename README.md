@@ -18,11 +18,11 @@ Setting file is JSON format.
 ```
 Start training.
 ```haskell
-Text.Nagato.Train.doTrain '[SETTINGFILE]'
+Text.Nagato.Train.doTrain '[SETTINGFILE]' '[SaveFile]'
 --For complement Naive Bayes
-Text.Nagato.Train_complement.doTrain '[SETTINGFILE]'
-```
+Text.Nagato.Train_complement.doTrain '[SETTINGFILE]' '[SaveFile]'
 
+```
 Classify
 ```haskell
 import Text.Nagato.NagatoIO as NagatoIO

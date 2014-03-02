@@ -36,7 +36,7 @@ test text classNormal classComplement = do
   return ((NC.classify wordList classNormal), (NC.classifyComplement wordList classComplement))
 
 doTrainNormal :: String -> IO()
-doTrainNormal settingName = Train.doTrain settingName
+doTrainNormal settingName = Train.doTrain settingName "classes.bin"
 
 doTrainComplemnt :: String -> IO()
-doTrainComplemnt settingName = Train_compl.doTrain settingName
+doTrainComplemnt settingName = Train_compl.doTrain settingName "classes_complement.bin"

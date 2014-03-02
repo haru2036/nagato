@@ -49,31 +49,26 @@ loadSettings settingName = do
   return $ Data.List.map(\a -> (className a, dataSource a))(classes(decodeJSON contents :: ClassList))
 
 filenameToString :: String -> IO String
-filenameToString fileName = do
-  handle <- openFile fileName ReadMode
+filenameToString settingFile = do
+  handle <- openFile settingFile ReadMode
   contents <- S.hGetContents handle
   return $ contents
 
 loadClassStrings :: [String] -> IO [String]
-loadClassStrings fileNames = do
-  if length fileNames == 1
+loadClassStrings settingFiles = do
+  if length settingFiles == 1
     then do
-      str <- filenameToString $ head fileNames
+      str <- filenameToString $ head settingFiles
       return [str]
     else do
-      str <- filenameToString $ head fileNames
-      deepStrs <- loadClassStrings $ drop 1 fileNames
+      str <- filenameToString $ head settingFiles
+      deepStrs <- loadClassStrings $ drop 1 settingFiles
       return $ str : deepStrs
 
-main :: IO()
-main = do
-  trainResult <- trainFromSetting "classes.json"
-  NagatoIO.writeToFile "classes.bin" trainResult
-
-doTrain :: String -> IO()
-doTrain filename = do
-  trainResult <- trainFromSetting "classes.json"
-  NagatoIO.writeToFile "classes.bin" trainResult
+doTrain :: String -> String -> IO()
+doTrain settingFile saveFileName = do
+  trainResult <- trainFromSetting settingFile
+  NagatoIO.writeToFile saveFileName trainResult
 
 trainFromSetting :: String -> IO [(String, Props)]
 trainFromSetting settingFileName = do
