@@ -18,9 +18,9 @@ Setting file is JSON format.
 ```
 Start training.
 ```haskell
-Text.Nagato.Train.doTrain '[SETTINGFILE]' '[SaveFile]'
+Text.Nagato.Train.doTrain "[SETTINGFILE]" "[SAVEFILE]"
 --For complement Naive Bayes
-Text.Nagato.Train_complement.doTrain '[SETTINGFILE]' '[SaveFile]'
+Text.Nagato.Train_complement.doTrain "[SETTINGFILE]" "[SAVEFILE]"
 
 ```
 Classify
@@ -30,8 +30,8 @@ import qualified Text.Nagato.Classify as Classifier
 
 --Load classes from file
 
-classes <- NagatoIO.readFromFile "classes.bin"
-classesComplement <- NagatoIO.readFromFile "complementClasses.bin"
+classes <- NagatoIO.readFromFile "[CLASSFILE]"
+classesComplement <- NagatoIO.readFromFile "[CLASSFILE_FOR_COMPLEMENT]"
 
 Classifier.classify 
 Classifier.classifyComplement
