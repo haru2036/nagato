@@ -16,7 +16,7 @@ version:             0.1.0.0
 synopsis:            A Naive Bayes classifier for Japanese text.
 
 -- A longer description of the package.
--- description:         
+description:         This is Naive Bayes classifier for Japanese text. It can be used as Complement Naive Bayes. 
 
 -- URL for the project homepage or repository.
 homepage:            http://github.com/haru2036/nagato
@@ -33,6 +33,8 @@ author:              haru2036
 -- An email address to which users can send suggestions, bug reports, and 
 -- patches.
 maintainer:          haru2036<haru2036@gmail.com>
+
+stability:           experimental
 
 -- A copyright notice.
 -- copyright:           
