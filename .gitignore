@@ -12,3 +12,6 @@ nagato_train
 *.iml
 *.xlsx
 *.csv
+dist
+Setup.hs
+!*.gz
