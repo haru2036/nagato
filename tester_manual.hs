@@ -13,7 +13,7 @@ main = do
   print $ fst $ unzip classes
   print $ fst $ unzip classesComplement
   putStrLn "Please type in a sentence:"
-  sentence <- readLn
+  sentence <- getLn
   wordsWakati <- MeCabTools.parseWakati sentence
   let wordsList = words wordsWakati
   putStrLn "normal:"
