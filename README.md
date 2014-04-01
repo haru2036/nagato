@@ -36,3 +36,5 @@ classesComplement <- NagatoIO.readFromFile "[CLASSFILE_FOR_COMPLEMENT]"
 Classifier.classify 
 Classifier.classifyComplement
 ```
+###注意事項
+MeCabの辞書はUTF-8でないと正常に動作しません
