@@ -9,6 +9,7 @@ NagatoはHaskellで書かれたナイーブベイズ分類器です。とりあ�
 ###Usage
 Setting file is CSV format.
 ```
+[CLASSNAME],[TEXTFILE]
 yuki,nagato_yuki.txt
 kancolle,nagato_kancolle.txt
 city,nagato_city.txt
