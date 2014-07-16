@@ -7,14 +7,11 @@ NagatoはHaskellで書かれたナイーブベイズ分類器です。とりあ�
 これからの機能追加予定として、品詞による学習内容のフィルタを予定しています。→しました。
 あとComplement Naive Bayesにも対応しました。
 ###Usage
-Setting file is JSON format.
-```json
-{"classes" : [
-    {"className" : "nagato_yuki", "dataSource" : "nagato_yuki.txt"},
-    {"className" : "nagato_kancolle", "dataSource" : "nagato_kancolle.txt"},
-    {"className" : "nagato_city", "dataSource" : "nagato_city.txt"}
-    ]
-}
+Setting file is CSV format.
+```
+yuki,nagato_yuki.txt
+kancolle,nagato_kancolle.txt
+city,nagato_city.txt
 ```
 Start training.
 ```haskell
