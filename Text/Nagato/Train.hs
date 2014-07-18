@@ -1,8 +1,13 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 module Text.Nagato.Train
 ( countFromSetting
-  ,calcParameterForClass
-  ,doTrain
+  ,trainFromSetting
+  ,trainAndSaveFromSetting 
+  ,freqsToProps
+  ,trainClass
+  ,countClass
+  ,parseAndCountClass 
+  ,parseAndTrainClass 
 )where
 import Text.CSV
 import Data.List as L
@@ -18,10 +23,28 @@ searchAndCountWords key items = length $ L.filter (==key) items
 getUnigramFrequency :: [String] -> Freqs
 getUnigramFrequency sList = fromList [(a, searchAndCountWords a sList) | a <- nub sList]
 
-trainClass :: String -> IO Freqs
-trainClass inputString = do
-  parseResult <- MeCabTools.parseFilteredChasenFormat inputString ["名詞"]
-  return $ getUnigramFrequency $ parseResult 
+parseString :: String -> IO [String]
+parseString doc = MeCabTools.parseFilteredChasenFormat doc ["名詞"]
+
+countClass :: [String] -> Freqs
+countClass = getUnigramFrequency 
+
+trainClass :: [String] -> Props
+trainClass doc = (freqsToProps . countClass) doc 2 
+
+freqsToProps :: Freqs -> Int -> Props
+freqsToProps classMap alpha = Data.Map.map (\a -> ((realToFrac (a + 1) / (realToFrac ((sum (elems classMap) + (length (keys classMap)) * (alpha - 1))))))) classMap
+
+parseAndCountClass :: String -> IO Freqs
+parseAndCountClass docStr = do
+  parsed <- parseString docStr
+  return $ countClass parsed
+
+parseAndTrainClass :: String -> IO Props
+parseAndTrainClass docStr = do
+  parsed <- parseString docStr
+  return $ trainClass parsed
+
 
 loadSettings :: String -> IO [(String, String)]
 loadSettings settingName = do
@@ -41,8 +64,8 @@ loadClassStrings settingFiles = do
       deepStrs <- loadClassStrings $ drop 1 settingFiles
       return $ str : deepStrs
 
-doTrain :: String -> String -> IO()
-doTrain settingFile saveFileName = do
+trainAndSaveFromSetting :: String -> String -> IO()
+trainAndSaveFromSetting settingFile saveFileName = do
   trainResult <- trainFromSetting settingFile
   NagatoIO.writeToFile saveFileName trainResult
 
@@ -51,8 +74,7 @@ trainFromSetting settingFileName = do
   classesList <- loadSettings settingFileName
   let unzippedClasses = unzip classesList
   classStrings <- loadClassStrings $ snd unzippedClasses
-  classesCounted <- mapM (\a -> trainClass a) classStrings
-  let classesTrained = L.map (\a -> calcParameterForClass a 2) classesCounted
+  classesTrained <- mapM (\a -> parseAndTrainClass a) classStrings
   return $ zip (fst unzippedClasses) classesTrained
 
 countFromSetting :: String -> IO [(String, Freqs)]
@@ -60,8 +82,6 @@ countFromSetting settingFileName = do
   classesList <- loadSettings settingFileName
   let unzippedClasses = unzip classesList
   classStrings <- loadClassStrings $ snd unzippedClasses
-  classesCounted <- mapM (\a -> trainClass a) classStrings
+  classesCounted <- mapM (\a -> parseAndCountClass a) classStrings
   return $ zip (fst unzippedClasses) classesCounted
 
-calcParameterForClass :: Freqs -> Int -> Props
-calcParameterForClass classMap alpha = Data.Map.map (\a -> ((realToFrac (a + 1) / (realToFrac ((sum (elems classMap) + (length (keys classMap)) * (alpha - 1))))))) classMap

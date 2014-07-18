@@ -32,5 +32,5 @@ makeComplementClass className classes = getOtherClasses className $ fromList cla
 doTrain :: String -> String -> IO()
 doTrain settingFile saveFileName = do
   counted <- Train.countFromSetting settingFile
-  let complementCounts = List.map (\classItems -> ((fst classItems), (Train.calcParameterForClass (makeComplementClass (fst classItems) counted)2))) counted
+  let complementCounts = List.map (\classItems -> ((fst classItems), (Train.freqsToProps (makeComplementClass (fst classItems) counted)2))) counted
   NagatoIO.writeToFile saveFileName complementCounts
