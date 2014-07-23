@@ -1,11 +1,11 @@
 module Text.Nagato.Train_complement(
-  doTrain
+  makeComplementClass
 )where
 import qualified Data.List as List
 import Data.Map as Map
 import Text.Nagato.Models 
-import qualified Text.Nagato.NagatoIO as NagatoIO
-import qualified Text.Nagato.Train as Train
+import Text.Nagato.Train
+import Text.Nagato.Train_complement
 
 
 removeMaybe :: Maybe Int -> Int
@@ -26,11 +26,8 @@ getClassNameList classes = keys classes
 addClasses :: [Freqs] -> Freqs
 addClasses maps = List.foldl (\acc x -> addTwoMaps acc x) (head maps) (tail maps)
 
-makeComplementClass :: String -> [(String, Freqs)] -> Freqs
-makeComplementClass className classes = getOtherClasses className $ fromList classes
+makeComplementCount :: String -> [(String, Freqs)] -> Freqs
+makeComplementCount className classes = getOtherClasses className $ fromList classes
 
-doTrain :: String -> String -> IO()
-doTrain settingFile saveFileName = do
-  counted <- Train.countFromSetting settingFile
-  let complementCounts = List.map (\classItems -> ((fst classItems), (Train.freqsToProps (makeComplementClass (fst classItems) counted)2))) counted
-  NagatoIO.writeToFile saveFileName complementCounts
+makeComplementClass :: Freqs -> Props
+makeComplementClass freqs = freqsToProps (makeComplementClass (freqs) counted) 2
