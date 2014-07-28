@@ -5,8 +5,6 @@ import qualified Data.List as List
 import Data.Map as Map
 import Text.Nagato.Models 
 import Text.Nagato.Train
-import Text.Nagato.Train_complement
-
 
 removeMaybe :: Maybe Int -> Int
 removeMaybe mb = maybe 0 (\a -> a) mb
@@ -29,5 +27,5 @@ addClasses maps = List.foldl (\acc x -> addTwoMaps acc x) (head maps) (tail maps
 makeComplementCount :: String -> [(String, Freqs)] -> Freqs
 makeComplementCount className classes = getOtherClasses className $ fromList classes
 
-makeComplementClass :: Freqs -> Props
-makeComplementClass freqs = freqsToProps (makeComplementClass (freqs) counted) 2
+makeComplementClass :: String -> [(String, Freqs)] -> Props
+makeComplementClass name freqs = freqsToProps (makeComplementCount name freqs) 2

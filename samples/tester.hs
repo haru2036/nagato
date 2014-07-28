@@ -68,7 +68,7 @@ loadClassStrings settingFiles = do
 doTrainCompl :: String -> String -> IO()
 doTrainCompl settingFile saveFileName = do
   counted <- countFromSetting settingFile
-  let complementCounts = L.map (\classItems -> ((fst classItems), (Train_compl.makeComplementClass(fst classItems)))) counted
+  let complementCounts = L.map (\classItems -> ((fst classItems), (Train_compl.makeComplementClass (snd counted)))) counted
   NagatoIO.writeToFile saveFileName complementCounts
 
 countFromSetting :: String -> IO [(String, Freqs)]
