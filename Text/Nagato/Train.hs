@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 module Text.Nagato.Train
-( freqsToProps
+( freqsToProbs
   ,trainClass
   ,countClass
   ,parseAndCountClass 
@@ -23,18 +23,18 @@ parseString doc = MeCabTools.parseFilteredChasenFormat doc ["名詞"]
 countClass :: [String] -> Freqs
 countClass = getUnigramFrequency 
 
-trainClass :: [String] -> Props
-trainClass doc = (freqsToProps . countClass) doc 2 
+trainClass :: [String] -> Probs
+trainClass doc = (freqsToProbs . countClass) doc 2 
 
-freqsToProps :: Freqs -> Int -> Props
-freqsToProps classMap alpha = Data.Map.map (\a -> ((realToFrac (a + 1) / (realToFrac ((sum (elems classMap) + (length (keys classMap)) * (alpha - 1))))))) classMap
+freqsToProbs :: Freqs -> Int -> Probs
+freqsToProbs classMap alpha = Data.Map.map (\a -> ((realToFrac (a + 1) / (realToFrac ((sum (elems classMap) + (length (keys classMap)) * (alpha - 1))))))) classMap
 
 parseAndCountClass :: String -> IO Freqs
 parseAndCountClass docStr = do
   parsed <- parseString docStr
   return $ countClass parsed
 
-parseAndTrainClass :: String -> IO Props
+parseAndTrainClass :: String -> IO Probs
 parseAndTrainClass docStr = do
   parsed <- parseString docStr
   return $ trainClass parsed

@@ -1,8 +1,8 @@
 module Text.Nagato.Models
 ( Freqs
-  ,Props
+  ,Probs
 )where
 import Data.Map
 
 type Freqs = Map String Int
-type Props = Map String Float
+type Probs = Map String Float

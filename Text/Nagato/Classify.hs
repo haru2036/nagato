@@ -33,13 +33,13 @@ classifyComplementIO classifySentence = do
   System.IO.print propabilityList
   System.IO.putStrLn $ selectMostByComplementClasses propabilityList
 
-calcProbability :: [String] -> Props -> Float
+calcProbability :: [String] -> Probs -> Float
 calcProbability wordList classMap = product $ Data.List.map (\a -> lookupPropabilityOfWord a classMap) wordList 
 
-lookupPropabilityOfWord :: String -> Props -> Float
+lookupPropabilityOfWord :: String -> Probs -> Float
 lookupPropabilityOfWord word classMap = maybe 1.0 (\a -> a + 1.0) (Data.Map.lookup word classMap)
 
-makeProbabilityList :: [String] -> [(String, Props)] -> [(String, Float)]
+makeProbabilityList :: [String] -> [(String, Probs)] -> [(String, Float)]
 makeProbabilityList wordList classes = Data.List.map (\a -> (fst a, calcProbability wordList (snd a))) classes 
 
 selectMostByComplementClasses :: [(String, Float)] -> String
@@ -50,8 +50,8 @@ selectMost :: [(String, Float)] -> String
 selectMost propabilityList = let valueList = snd (unzip propabilityList)
                           in maybe "error" (\a -> fst (propabilityList !! a)) $ (Data.List.elemIndex (maximum valueList)) valueList
 
-classify :: [String] -> [(String, Props)] -> String
+classify :: [String] -> [(String, Probs)] -> String
 classify wordList props = selectMost $ makeProbabilityList wordList props
 
-classifyComplement :: [String] -> [(String, Props)] -> String
+classifyComplement :: [String] -> [(String, Probs)] -> String
 classifyComplement wordList props = selectMostByComplementClasses $ makeProbabilityList wordList props

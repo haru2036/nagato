@@ -27,5 +27,5 @@ addClasses maps = List.foldl (\acc x -> addTwoMaps acc x) (head maps) (tail maps
 makeComplementCount :: String -> [(String, Freqs)] -> Freqs
 makeComplementCount className classes = getOtherClasses className $ fromList classes
 
-makeComplementClass :: String -> [(String, Freqs)] -> Props
-makeComplementClass name freqs = freqsToProps (makeComplementCount name freqs) 2
+makeComplementClass :: String -> [(String, Freqs)] -> Probs
+makeComplementClass name freqs = freqsToProbs (makeComplementCount name freqs) 2
