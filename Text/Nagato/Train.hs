@@ -1,91 +1,41 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 module Text.Nagato.Train
-( countFromSetting
-  ,calcParameterForClass
-  ,doTrain
+( freqsToProbs
+  ,trainClass
+  ,countClass
+  ,parseAndCountClass 
+  ,parseAndTrainClass 
 )where
-import System.IO
-import System.IO.UTF8 as S
-import Text.JSON.Generic
-import Data.List
+import Data.List as L
 import Data.Map
 import Text.Nagato.Models
-import Text.Nagato.NagatoIO as NagatoIO
 import Text.Nagato.MeCabTools as MeCabTools
 
-data AClass = AClass {
-  className :: String,
-  dataSource :: String
-  }deriving(Eq, Show, Data, Typeable)
-
-data ClassList = ClassList{
-  classes :: [AClass]
-  }deriving(Eq, Show, Data, Typeable)
-
-data Frequency = Frequency{
-  frequency :: Freqs
-  }deriving(Eq, Show, Data, Typeable)
-
-data FrequencyOfClasses = FrequencyOfClasses{
-  classesLearned :: Map String Frequency
-  }deriving(Eq, Show, Data, Typeable)
-
-
 searchAndCountWords :: String -> [String] -> Int
-searchAndCountWords key items = length $ Data.List.filter (==key) items
+searchAndCountWords key items = length $ L.filter (==key) items
 
 getUnigramFrequency :: [String] -> Freqs
 getUnigramFrequency sList = fromList [(a, searchAndCountWords a sList) | a <- nub sList]
 
-trainClass :: String -> IO Freqs
-trainClass inputString = do
-  parseResult <- MeCabTools.parseFilteredChasenFormat inputString ["名詞"]
-  return $ getUnigramFrequency $ parseResult 
+parseString :: String -> IO [String]
+parseString doc = MeCabTools.parseFilteredChasenFormat doc ["名詞"]
 
-loadSettings :: String -> IO [(String, String)]
-loadSettings settingName = do
-  handle <- openFile settingName ReadMode
-  contents <- S.hGetContents handle
-  return $ Data.List.map(\a -> (className a, dataSource a))(classes(decodeJSON contents :: ClassList))
+countClass :: [String] -> Freqs
+countClass = getUnigramFrequency 
 
-filenameToString :: String -> IO String
-filenameToString settingFile = do
-  handle <- openFile settingFile ReadMode
-  contents <- S.hGetContents handle
-  return $ contents
+trainClass :: [String] -> Probs
+trainClass doc = (freqsToProbs . countClass) doc 2 
 
-loadClassStrings :: [String] -> IO [String]
-loadClassStrings settingFiles = do
-  if length settingFiles == 1
-    then do
-      str <- filenameToString $ head settingFiles
-      return [str]
-    else do
-      str <- filenameToString $ head settingFiles
-      deepStrs <- loadClassStrings $ drop 1 settingFiles
-      return $ str : deepStrs
+freqsToProbs :: Freqs -> Int -> Probs
+freqsToProbs classMap alpha = Data.Map.map (\a -> ((realToFrac (a + 1) / (realToFrac ((sum (elems classMap) + (length (keys classMap)) * (alpha - 1))))))) classMap
 
-doTrain :: String -> String -> IO()
-doTrain settingFile saveFileName = do
-  trainResult <- trainFromSetting settingFile
-  NagatoIO.writeToFile saveFileName trainResult
+parseAndCountClass :: String -> IO Freqs
+parseAndCountClass docStr = do
+  parsed <- parseString docStr
+  return $ countClass parsed
 
-trainFromSetting :: String -> IO [(String, Props)]
-trainFromSetting settingFileName = do
-  classesList <- loadSettings settingFileName
-  let unzippedClasses = unzip classesList
-  classStrings <- loadClassStrings $ snd unzippedClasses
-  classesCounted <- mapM (\a -> trainClass a) classStrings
-  let classesTrained = Data.List.map (\a -> calcParameterForClass a 2) classesCounted
-  return $ zip (fst unzippedClasses) classesTrained
+parseAndTrainClass :: String -> IO Probs
+parseAndTrainClass docStr = do
+  parsed <- parseString docStr
+  return $ trainClass parsed
 
-countFromSetting :: String -> IO [(String, Freqs)]
-countFromSetting settingFileName = do
-  classesList <- loadSettings settingFileName
-  let unzippedClasses = unzip classesList
-  classStrings <- loadClassStrings $ snd unzippedClasses
-  classesCounted <- mapM (\a -> trainClass a) classStrings
-  return $ zip (fst unzippedClasses) classesCounted
-
-calcParameterForClass :: Freqs -> Int -> Props
-calcParameterForClass classMap alpha = Data.Map.map (\a -> ((realToFrac (a + 1) / (realToFrac ((sum (elems classMap) + (length (keys classMap)) * (alpha - 1))))))) classMap

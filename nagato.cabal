@@ -10,7 +10,7 @@ name:                nagato
 -- PVP summary:      +-+------- breaking API changes
 --                   | | +----- non-breaking API additions
 --                   | | | +--- code changes with no API change
-version:             0.1.0.0
+version:             0.2.0.1
 
 -- A short (one-line) description of the package.
 synopsis:            A Naive Bayes classifier for Japanese text.
@@ -55,5 +55,25 @@ library
   -- other-modules:       
   
   -- Other library packages from which modules are imported.
-  build-depends:       base ==4.6.*, mecab ==0.4.*, json ==0.7.*, containers ==0.5.*, cereal ==0.3.*, utf8-string ==0.3.*, bytestring ==0.10.*, either-unwrap ==1.1.*, csv ==0.1.*, regex-compat ==0.95.*
-  
+  build-depends:       base
+                      ,mecab ==0.4.*
+                      ,containers ==0.5.*
+                      ,cereal ==0.4.*
+                      ,utf8-string ==0.3.*
+                      ,bytestring ==0.10.*
+                      ,either-unwrap ==1.1.*
+                      ,csv ==0.1.*
+                      ,regex-compat ==0.95.*
+
+executable command-line
+  main-is: Main.hs
+  build-depends:       base
+                      ,mecab ==0.4.*
+                      ,containers ==0.5.*
+                      ,cereal ==0.4.*
+                      ,utf8-string ==0.3.*
+                      ,bytestring ==0.10.*
+                      ,either-unwrap ==1.1.*
+                      ,csv ==0.1.*
+                      ,regex-compat ==0.95.*
+

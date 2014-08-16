@@ -7,18 +7,17 @@ module Text.Nagato.NagatoIO
 , loadCSVFileUtf8
 )where
 
-import System.IO
+import System.IO as IO
 import Data.Map
 import Data.Serialize
 import Data.ByteString
 import Data.Either.Unwrap
 import Text.CSV
-import System.IO.UTF8 as S
 
 loadPlainText :: String -> IO String
 loadPlainText fileName = do
   handle <- openFile fileName ReadMode
-  contents <- S.hGetContents handle
+  contents <- IO.hGetContents handle
   return $ contents
 
 writeToFile :: String -> [(String, Map String Float)] -> IO()
@@ -46,5 +45,5 @@ readFromFileCounts filePath = do
 loadCSVFileUtf8 :: String -> IO CSV
 loadCSVFileUtf8 fileName = do
   loadedText <- loadPlainText fileName
-  let parsed = either (\a->[]) (\a->a) $ parseCSV "hoge" loadedText
+  let parsed = either (\_->[]) (\a->a) $ parseCSV "hoge" loadedText
   return parsed

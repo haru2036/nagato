@@ -17,3 +17,4 @@ Setup.hs
 !*.gz
 .cabal-sandbox
 cabal.sandbox.config
+.DS_Store
