@@ -4,5 +4,5 @@ module Text.Nagato.Models
 )where
 import Data.Map
 
-type Freqs = Map String Int
-type Probs = Map String Float
+type Freqs a = Map a Int
+type Probs a = Map a Float
