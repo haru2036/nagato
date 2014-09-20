@@ -1,4 +1,3 @@
-{-# LANGUAGE DeriveDataTypeable #-}
 module Text.Nagato.Train
 ( freqsToProbs
   ,trainClass
