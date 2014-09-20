@@ -36,7 +36,7 @@ judge item =
       answers = snd item
   in ((trueAnswer == (fst answers)),(trueAnswer == (snd answers )))
 
-test :: String -> [(String, Probs)] -> [(String, Probs)] -> IO(String, String)
+test :: String -> [(String, Probs String)] -> [(String, Probs String)] -> IO(String, String)
 test text classNormal classComplement = do
   wakati <- MeCabTools.parseWakati text
   let wordList = words wakati
@@ -47,7 +47,7 @@ trainAndSaveFromSetting settingFile saveFileName = do
   trainResult <- trainFromSetting settingFile
   NagatoIO.writeToFile saveFileName trainResult
 
-trainFromSetting :: String -> IO [(String, Probs)]
+trainFromSetting :: String -> IO [(String, Probs String)]
 trainFromSetting settingFileName = do
   classesList <- loadSettings settingFileName
   let unzippedClasses = unzip classesList
@@ -78,7 +78,7 @@ doTrainCompl settingFile saveFileName = do
   let complementCounts = L.map (\classItems -> ((fst classItems), (Train_compl.makeComplementClass (fst classItems) counted))) counted
   NagatoIO.writeToFile saveFileName complementCounts
 
-countFromSetting :: String -> IO [(String, Freqs)]
+countFromSetting :: String -> IO [(String, Freqs String)]
 countFromSetting settingFileName = do
   classesList <- loadSettings settingFileName
   let unzippedClasses = unzip classesList

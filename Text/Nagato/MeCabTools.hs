@@ -1,7 +1,9 @@
 module Text.Nagato.MeCabTools
-( parseChasenFormat
+( parseFormat
 , parseFilteredChasenFormat
 , parseWakati
+, splitOnConma
+, splitOnTab
 )where
 
 import Text.Regex
@@ -13,15 +15,15 @@ parseWakati sentence = do
   mecab <- new2 "-Owakati"
   parse mecab sentence
 
-parseChasenFormat :: String -> IO String
-parseChasenFormat sentence = do
+parseFormat :: String -> IO String
+parseFormat sentence = do
   mecab <- new2 ""
   parse mecab sentence
 
 parseFilteredChasenFormat :: String -> [String] -> IO [String]
 parseFilteredChasenFormat sentence filters = do
-  chasenString <- parseChasenFormat sentence
-  let endStripped = init $ lines chasenString
+  string <- parseFormat sentence
+  let endStripped = init $ lines string
   let strippedChasenString = unlines [x | x <- endStripped, x /= ""]
   let returned = filterByPartOfSpeech strippedChasenString filters
   return returned
@@ -51,4 +53,4 @@ splitLine line = let splitted = splitOnConma (getSpeechFromSplitTab line)
     else ""
 
 filterByPartOfSpeech :: String -> [String] -> [String]
-filterByPartOfSpeech chasenString filters = [head (splitOnTab x) | x <- (lines chasenString), (filterAPart x filters) == True]
+filterByPartOfSpeech string filters = [head (splitOnTab x) | x <- (lines string), (filterAPart x filters) == True]
