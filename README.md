@@ -36,3 +36,4 @@ Classifier.classifyComplement
 ```
 ###注意事項
 MeCabの辞書はUTF-8でないと正常に動作しません
+MeCabとのリンク時に問題が発生する場合は、MeCabパッケージをインストール時に--extra-include-dirs --extra-lib-dirsをすると問題が解消するかもしれません。
