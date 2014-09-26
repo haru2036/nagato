@@ -6,9 +6,9 @@ module Text.Nagato.MeCabTools
 , splitOnTab
 )where
 
-import Text.Regex
 import Text.MeCab
 import Data.List
+import Data.List.Split
 
 parseWakati :: String -> IO String
 parseWakati sentence = do
@@ -29,10 +29,10 @@ parseFilteredChasenFormat sentence filters = do
   return returned
 
 splitOnTab :: String -> [String]
-splitOnTab line = splitRegex (mkRegex "\t") line
+splitOnTab = splitOn "\t"
 
 splitOnConma :: String -> [String]
-splitOnConma line = splitRegex (mkRegex ",") line
+splitOnConma = splitOn ","
 
 doEachFilters :: String -> String -> Bool
 doEachFilters part filtersItem = isPrefixOf part filtersItem
