@@ -6,6 +6,7 @@ module Text.Nagato.Util(
 )where
 import Text.CSV
 import Data.List as L
+import Data.Maybe
 import Text.Nagato.NagatoIO as NagatoIO
 import Text.Nagato.Models as Models
 import Text.Nagato.MeCabTools as MeCabTools
@@ -40,7 +41,7 @@ test :: String -> [(String, Probs String)] -> [(String, Probs String)] -> IO(Str
 test text classNormal classComplement = do
   wakati <- MeCabTools.parseWakati text
   let wordList = words wakati
-  return ((NC.classify wordList classNormal), (NC.classifyComplement wordList classComplement))
+  return ((fromJust (NC.classify wordList classNormal)), (fromJust (NC.classifyComplement wordList classComplement)))
 
 trainAndSaveFromSetting :: String -> String -> IO()
 trainAndSaveFromSetting settingFile saveFileName = do
