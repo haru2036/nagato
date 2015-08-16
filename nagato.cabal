@@ -65,3 +65,17 @@ library
                       ,csv ==0.1.*
                       ,split
 
+executable train
+  Build-Depends:  base
+                 ,nagato
+                 ,csv
+  Main-Is:        Main.hs
+  Hs-Source-Dirs: samples/train
+
+executable classify
+  Build-Depends:  base
+                 ,nagato
+                 ,csv
+
+  Main-Is:        Main.hs
+  Hs-Source-Dirs: samples/classify
